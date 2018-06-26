@@ -5,6 +5,8 @@ import Html.Attributes exposing (src)
 import Html.Events exposing (onClick)
 import Json.Decode
 import Task
+import Random
+import Array
 
 ---- MODEL ----
 
@@ -43,8 +45,9 @@ init flags =
 
 
 type Msg
-    = FindFirst
-    | UpdatePan
+    = UpdatePan
+    | FindRandom
+    | RandomNumber Int
 
 decodeGstinsList : Json.Decode.Decoder (List Gstin)
 decodeGstinsList =
@@ -69,8 +72,14 @@ generatePan gstin =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        FindFirst ->
-            ( { model | selected = (List.head model.gstins)}, Cmd.none )
+        FindRandom ->
+            (model, Random.generate RandomNumber (Random.int 0 (List.length model.gstins - 1)))
+        RandomNumber rn ->
+            let
+                selected = Array.fromList model.gstins
+                    |> Array.get rn
+            in
+                ({ model | selected = selected }, Cmd.none)
         UpdatePan ->
             let
                 gstins = List.map generatePan model.gstins
@@ -105,7 +114,7 @@ viewGstin selected =
 view : Model -> Html Msg
 view model =
     div []
-        [ img [ src "/logo.svg", onClick FindFirst ] []
+        [ img [ src "/logo.svg", onClick FindRandom ] []
         , div [] [text "(Click on the logo to find another)"]
         , div [] (viewGstin model.selected)
         ]
