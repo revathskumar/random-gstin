@@ -65,7 +65,7 @@ decodeGstin =
 generatePan : Gstin -> Gstin
 generatePan gstin =
     let
-        pan = String.slice 2 11 gstin.gstin
+        pan = String.slice 2 12 gstin.gstin
     in
         {gstin | pan = Just pan}
 
