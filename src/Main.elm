@@ -114,7 +114,7 @@ viewGstin selected =
 view : Model -> Html Msg
 view model =
     div []
-        [ img [ src "/logo.svg", onClick FindRandom ] []
+        [ img [ src "logo.svg", onClick FindRandom ] []
         , div [] [text "(Click on the logo to find another)"]
         , div [] (viewGstin model.selected)
         ]
